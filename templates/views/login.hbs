@@ -1,0 +1,42 @@
+{{!-- hbs means handle bars same as html but better --}}
+<!doctype html>
+<html lang="en">
+  <head>
+    {{>header}}
+    <title>Hello, world!</title>
+  </head>
+  <body>
+      {{>navbar}}
+<div style="margin:4rem; border:2px solid green; padding:2rem; background-color: powderblue; height:auto">
+  <form class="row" action="/login" method="POST">
+  {{!-- email --}}
+  
+  <div class="col-md-6" style="margin: 2rem;">
+    <input type="email" class="form-control" id="inputEmail4" placeholder="Email" value="" name="email" required>
+  </div>
+
+  
+  {{!-- to force next input block to next line --}}
+  <div class="w-100"></div> 
+
+  {{!-- password --}}
+  
+  <div class="col-6" style="margin: 2rem;">
+   <input type="password" class="form-control" id="inputPassword4" placeholder="Password" value="" name="password" required>
+  </div>
+  
+
+<div class="w-100"></div>
+
+  <div class="col-6">
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+  </div>
+</form>
+</div>
+   
+  
+    <!-- Bootstrap js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+  </body>
+</html>

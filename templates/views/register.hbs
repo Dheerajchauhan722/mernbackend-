@@ -1,0 +1,82 @@
+{{!-- hbs means handle bars same as html but better --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{>header}}
+    <title>Registeration</title>
+</head>
+
+<body>
+    
+        {{>navbar}}
+   
+{{!-- below root(/register) will be rendered with post request on submiting this form --}}
+<form class="row g-3 m-4" action="/register" method="POST"> 
+    {{!-- name --}}
+  <div class="col-6">
+    <label for="inputName" class="form-label" ></label>
+    <input type="text" class="form-control" id="inputName" placeholder="First Name" value="" name="firstname" required>
+  </div>
+
+  {{!-- surname --}}
+  <div class="col-6">
+    <label for="inputLastName" class="form-label"></label>
+    <input type="text" class="form-control" id="inputLastName" placeholder="Last Name" value="" name="lastname" >
+  </div>
+
+  {{!-- email --}}
+  <div class="col-md-6">
+    <label for="inputEmail4" class="form-label"></label>
+    <input type="email" class="form-control" id="inputEmail4" placeholder="Email" value="" name="email" required>
+  </div>
+  
+  
+  {{!-- gender --}}
+ <div class="form-check">
+  <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="male">
+  <label class="form-check-label" for="flexRadioDefault1">
+    Male
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="female">
+  <label class="form-check-label" for="flexRadioDefault2">
+    Female
+  </label>
+</div>
+
+  {{!-- phone --}}
+  <div class="col-6">
+    <label for="inputPhone" class="form-label"></label>
+    <input type="text" class="form-control" id="verifyinputPhone" placeholder="Phone Number" value="" name="phone" required>
+  </div>
+
+{{!-- Age --}}
+  <div class="col-6">
+    <label for="inputAge" class="form-label"></label>
+    <input type="number" class="form-control" id="verifyinputAge4" placeholder="Age in years" value="" name="age" required>
+  </div>
+
+  {{!-- password --}}
+  <div class="col-6">
+    <label for="inputPassword4" class="form-label"></label>
+    <input type="password" class="form-control" id="inputPassword4" placeholder="Password" value="" value="" name="password" required>
+  </div>
+
+  {{!-- verify password --}}
+  <div class="col-6">
+    <label for="inputPassword4" class="form-label"></label>
+    <input type="password" class="form-control" id="verifyinputPassword4" placeholder="Verify Password" value="" name="confirmpassword" required>
+  </div>
+
+  {{!-- submit button --}}
+  <div class="col-6">
+    {{!-- on submitting this register button control of form go to the root mentioned in the <form> starting with post request --}}
+    <input type="submit" class="btnRegister" value="Register"> 
+  </div>
+</form>
+
+    
+</body>
+
+</html>

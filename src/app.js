@@ -122,7 +122,7 @@ app.listen(port,()=>{
 //     const userVerification=await jwt.verify(token,"mynameisdheerajchauhanfromgopalgarh")
 //     console.log(userVerification);
 // }
-// createToken();
+// createToken(); // calling the function
 
 
 

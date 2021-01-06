@@ -55,7 +55,6 @@ employeeSchema.methods.generateAuthToken=async function(){ /// methods() used be
     try{
         // using this._id we can get data from form which we just register ot login
         const token_result=jwt.sign({_id:this._id.toString()},process.env.SECRET_KEY);  //we fetching secrete_key from.env and format to fetch any value from key-value in env is by using process.env.key_name
-        
         this.tokens=this.tokens.concat({token:token_result}); //we are just giving the inner token the value of token_result
         await this.save(); // to save tokens in database
         return token_result;

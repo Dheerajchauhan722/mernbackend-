@@ -1,9 +1,16 @@
-require('dotenv').config({path:'../.env'});  // dotenv is used to encrypt your secrete key when tokening for user you need to give the proper path
+// Always use await in front of async functions if something returns promise you can check by console.log the retuen value
+
+require('dotenv').config(); //  {path:"../.env"}   dotenv is used to encrypt your secrete key when tokening for user you need to give the proper path
 const express=require("express");
 const app=express();// app is object to all methods and properties inside the express
 const port=process.env.PORT || 3000; // process.env.PORT is used for global host
 require("./db/conn");  // making connection with mongodb
 const Register=require("./models/registers");
+
+var cookieParser = require('cookie-parser')// to get the cookie from and then authenticate
+app.use(cookieParser()); // to use cookieParser in out node,express
+
+const auth=require("./middleware/auth");
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));  // to get form data to your post request in app.js file you must add this line
 
@@ -28,6 +35,30 @@ app.get("/",async(req,res)=>{
     res.render("index");  // this will render at localhost 3000
 })
 
+app.get("/secret",auth,async(req,res)=>{  // now auth middleware will be called first before function execution
+    //how to get token from cookie when login
+    // console.log(`This is the cookie awsome = ${req.cookies.jwt}`); 
+    res.render("secret");  // this will render at localhost 3000
+})
+
+app.get("/logout",auth,async(req,res)=>{
+    try{
+        // if you want to logout all logins of same website from all devices then remove all tokens by returning false inside the filter
+        req.user.tokens=req.user.tokens.filter((cur_ele)=>{ // cur_ele is iteration over the all tokens
+            return cur_ele.token !== req.token; // for matched token it will retuen false  req.token is our corrent token to get loged out
+        });
+        res.clearCookie("jwt");
+        console.log("Logout complete");
+        await req.user.save(); // to delete cookie after logout
+        res.render("login");
+
+    }
+    catch(e){
+        res.send(e).status(500);
+    }
+         
+})
+
 app.get("/register",async(req,res)=>{
     res.render("register");
 }) 
@@ -50,11 +81,24 @@ app.post("/register",async(req,res)=>{
                 confirmpassword:confirmpassword
     
             });
+            // we are generating token using a function in register.js to hold user authentication info
             const token=await registerEmployee.generateAuthToken(); // we can call a function using Register instance and can declare it in registers.js => Register is the module registers.js because we export it using name Register 
-            // console.log(token);
+            
+            // storing the token info in cookies which identifies users and setting expiry time
+            res.cookie("jwt",token,{
+                expires:new Date(Date.now()+300000), // token expiry date is in mili second (1sec=1000 mili sec)
+                httpOnly:true // now jwt value cannot be modified by user over website
+                // secure:true
+
+            }); 
+            
             const Employee_registered=await registerEmployee.save();
-            res.status(201).render("register");
-        }else{
+            
+            res.status(201).render("register");// keep it at last
+
+
+        }
+        else{
             res.send("Passwords are not matching");  
         }
         
@@ -72,12 +116,20 @@ app.post("/login",async(req,res)=>{
     try{
         const login_email=req.body.email;
         const login_password=req.body.password;
-        const user_email=await Register.findOne({email:login_email}); // first email is from database 2nd is what user add
-        const user_data_password=user_email.password;
-        const isMatch=bcrypt.compare(login_password,user_data_password);
-
-        const token=await user_email.generateAuthToken(); // here we can replace registerEmployee with user_email because user_email is also an instance of Regiser()
+        const user_data=await Register.findOne({email:login_email}); // first email is from database 2nd is what user add
+        const user_data_password=user_data.password;
+        const isMatch=await bcrypt.compare(login_password,user_data_password);
         if(isMatch){
+
+            const token=await user_data.generateAuthToken(); // here we can replace registerEmployee with user_email because user_email is also an instance of Regiser()
+            // storing the token info in cookies which identifies users and setting expiry time
+            res.cookie("jwt",token,{
+            expires:new Date(Date.now()+300000), // token expiry date is in mili second (1sec=1000 mili sec)
+            httpOnly:true // now jwt value cannot be modified by user over website
+            // secure:true
+            }); 
+            
+            
             res.status(201).render("index");
         }
         else{
